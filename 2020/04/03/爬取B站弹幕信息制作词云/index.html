@@ -229,12 +229,12 @@ html=r.text
 print(html)</code></pre>
 <h5 id="弹幕裁取"><a href="#弹幕裁取" class="headerlink" title="弹幕裁取"></a>弹幕裁取</h5><p>在爬取好页面信息html后，我们使用BeautifulSoup库进行html页面的解析。将html解析成beautifulsoup类。</p>
 <pre><code class="python">soup=BeautifulSoup(html,&#39;html.parser&#39;)</code></pre>
-<p>在任务执行前对页面的分析或者刚刚我们用print()函数所看到的页面信息中，我们可以发现：弹幕内容被存放到了<b>中的字符串中。所以我们可以通过soup.find_all()来获得所有b标签。然后我们使用一个for循环获得单个标签，再通过tag.string 来获得b标签的字符串内容，即我们所需要的弹幕内容。</b></p>
+<p>在任务执行前对页面的分析或者刚刚我们用print()函数所看到的页面信息中，我们可以发现：弹幕内容被存放到了d标签中的字符串中。所以我们可以通过soup.find_all()来获得所有d标签。然后我们使用一个for循环获得单个标签，再通过tag.string 来获得b标签的字符串内容，即我们所需要的弹幕内容。</p>
 <pre><code>ls=soup.find_all(&#39;d&#39;)
 danmu=&#39;&#39;
 for i in ls:
    content=&#39;&#39;.join(i.string)
-   danmu+=content</code></pre><p>当然，你要是不嫌烦的话，可以按照网上许多教程所说的那样获得b标签的所有内容，然后再用正则表达式截取出弹幕内容。当然这样就比较麻烦，显然辜负了B站程序员们清楚的代码风格。<del>但是这锻炼了你正则表达式的熟练度。</del></p>
+   danmu+=content</code></pre><p>当然，你要是不嫌烦的话，可以按照网上许多教程所说的那样获得d标签的所有内容，然后再用正则表达式截取出弹幕内容。当然这样就比较麻烦，显然辜负了B站程序员们清楚的代码风格。<del>但是这锻炼了你正则表达式的熟练度。</del></p>
 <pre><code class="python">content=str(ls)
 pattern=re.compile(&#39;&lt;d.*?&gt;(.*?)&lt;/d&gt;&#39;)
 danmu=pattern.findall(content)</code></pre>
@@ -245,7 +245,7 @@ txt=open(&#39;danmu.txt&#39;,&#39;r&#39;,encoding=&#39;UTF-8&#39;).read()
 ls=jieba.lcut(txt)
 content=&#39; &#39;.join(ls)     #空格分隔词语，方便下一步词云的制作
 print(content)            #检查</code></pre>
-<p>分词后我们就可以使用Wordcloud库进行词云制作了。如果你想要制作一个特别的词云，你可能需要mask的支持。mask可以理解为蒙版，可以使你的词云呈现特定的形状。你需要使用matplotlib.pyplot库来读取你的图片mask。最后将词云文件保存，任务完成。最后我们得到的结果如下：<img src="/2020/04/03/%E7%88%AC%E5%8F%96B%E7%AB%99%E5%BC%B9%E5%B9%95%E4%BF%A1%E6%81%AF%E5%88%B6%E4%BD%9C%E8%AF%8D%E4%BA%91/E:%5Cblog%5Csource_posts%5C%E7%88%AC%E5%8F%96B%E7%AB%99%E5%BC%B9%E5%B9%95%E4%BF%A1%E6%81%AF%E5%88%B6%E4%BD%9C%E8%AF%8D%E4%BA%91%5Csui.png" srcset="/img/loading.gif" alt></p>
+<p>分词后我们就可以使用Wordcloud库进行词云制作了。如果你想要制作一个特别的词云，你可能需要mask的支持。mask可以理解为蒙版，可以使你的词云呈现特定的形状。你需要使用matplotlib.pyplot库来读取你的图片mask。最后将词云文件保存，任务完成。最后我们得到的结果如下：<a href="https://i0.hdslb.com/bfs/article/a5e10612fb16472ee91bac1526905ad1eff81e1e.png@1036w_1380h.webp" target="_blank" rel="noopener">词云效果</a></p>
 <pre><code class="python">import wordcloud
 from matplotlib.pyplot import imread
 
