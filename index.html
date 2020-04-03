@@ -144,8 +144,59 @@
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
+      <a href="/2020/04/03/%E7%88%AC%E5%8F%96B%E7%AB%99%E5%BC%B9%E5%B9%95%E4%BF%A1%E6%81%AF%E5%88%B6%E4%BD%9C%E8%AF%8D%E4%BA%91/">
+        <p class="h4 index-header">爬取B站弹幕信息制作词云</p>
+      </a>
+
+      <a href="/2020/04/03/%E7%88%AC%E5%8F%96B%E7%AB%99%E5%BC%B9%E5%B9%95%E4%BF%A1%E6%81%AF%E5%88%B6%E4%BD%9C%E8%AF%8D%E4%BA%91/" class="index-excerpt-wrap">
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">代码部分获得弹幕import re
+import requests
+import bs4
+from bs4 import BeautifulSoup
+
+#获取弹幕
+def getDM(oid):
+    r=requests.get(&#39;https://api.bilibili.com/x/v1/dm/list.so?oid=&#39;+oid)
+    r.encoding=r.apparent_encoding
+    return r.text
+#截取有效弹幕部分
+def cutDM(html):
+    soup=BeautifulSoup(html,&#39;html.pars</div>
+        </div>
+      </a>
+
+      <div class="index-btm">
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-04-03&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/python/">python</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/%E7%88%AC%E8%99%AB-B%E7%AB%99/">-爬虫
+-B站</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
       <a href="/2020/04/02/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87blog/">
-        <p class="h4 index-header">我的第一篇blog</p>
+        <p class="h4 index-header">我的博客说明</p>
       </a>
 
       <a href="/2020/04/02/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87blog/" class="index-excerpt-wrap">
@@ -154,9 +205,9 @@
           
         
         <div class="index-excerpt" >
-          <div class="index-text mb-1">我的第一篇blog为啥整了这个玩意其实说实在的也没有什么原因，在翻关注的up主‘codesheep’的视频时看到了有教怎么用hexo搭建个人博客的。正好我今天也不怎么想学习，于是就整了一个…虽然但是，整这个的过程真的挺麻烦的，如果有感兴趣的也可以去看一下（因为他是macOS系统，所以Windows上有很多操作不一样，建议开着弹幕看）。
+          <div class="index-text mb-1">为啥整了这个玩意其实说实在的也没有什么原因，在翻关注的up主‘codesheep’的视频时看到了有教怎么用hexo搭建个人博客的。正好我今天也不怎么想学习，于是就整了一个…虽然但是，整这个的过程真的挺麻烦的，如果有感兴趣的也可以去看一下（因为他是macOS系统，所以Windows上有很多操作不一样，建议开着弹幕看）。
 要用这玩意干啥毕竟是心血来潮弄的博客，所以具体要做什么也没有很清楚的想法。但是出于不想要和其他平台的功能重复，所以这边基本上是不会发一些随笔之类的，主要会围绕编程、视频剪辑相关的比较偏所谓‘极客’一点的东西。
-目前的想法是每月计划，每周学习总结之类的都会发上来。</div>
+目前的想法是每月计划，每周学习总结之类的都会发上来。毕竟要真写纯技术类</div>
         </div>
       </a>
 
@@ -165,6 +216,17 @@
           <i class="iconfont icon-riqi2"></i>&nbsp;2020-04-02&nbsp;&nbsp;
         
         
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/%E8%AE%A1%E5%88%92/">-计划</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/%E7%94%9F%E6%B4%BB-%E8%AE%A1%E5%88%92/">-生活
+-计划</a>&nbsp;
+          
         
       </div>
     </div>

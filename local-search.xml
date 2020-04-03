@@ -4,13 +4,52 @@
   
   
   <entry>
-    <title>我的第一篇blog</title>
+    <title>爬取B站弹幕信息制作词云</title>
+    <link href="/2020/04/03/%E7%88%AC%E5%8F%96B%E7%AB%99%E5%BC%B9%E5%B9%95%E4%BF%A1%E6%81%AF%E5%88%B6%E4%BD%9C%E8%AF%8D%E4%BA%91/"/>
+    <url>/2020/04/03/%E7%88%AC%E5%8F%96B%E7%AB%99%E5%BC%B9%E5%B9%95%E4%BF%A1%E6%81%AF%E5%88%B6%E4%BD%9C%E8%AF%8D%E4%BA%91/</url>
+    
+    <content type="html"><![CDATA[<h3 id="代码部分"><a href="#代码部分" class="headerlink" title="代码部分"></a>代码部分</h3><h5 id="获得弹幕"><a href="#获得弹幕" class="headerlink" title="获得弹幕"></a>获得弹幕</h5><pre><code class="python">import reimport requestsimport bs4from bs4 import BeautifulSoup#获取弹幕def getDM(oid):    r=requests.get(&#39;https://api.bilibili.com/x/v1/dm/list.so?oid=&#39;+oid)    r.encoding=r.apparent_encoding    return r.text#截取有效弹幕部分def cutDM(html):    soup=BeautifulSoup(html,&#39;html.parser&#39;)    ls=soup.find_all(&#39;d&#39;)    danmu=&#39;&#39;    for i in ls:        content=&#39;&#39;.join(i.string)        danmu+=content    #content=str(ls)    #pattern=re.compile(&#39;&lt;d.*?&gt;(.*?)&lt;/d&gt;&#39;)    #danmu=pattern.findall(content)    return danmudef saveDM(danmu):    f=open(&#39;danmu.txt&#39;,&#39;wt&#39;,encoding=&#39;utf-8&#39;)    danmu=str(danmu)    f.write(danmu)def main():    oid=input(&#39;请输入oid:&#39;)    html=getDM(oid)    danmu=cutDM(html)    saveDM(danmu)main()</code></pre><h5 id="制作词云"><a href="#制作词云" class="headerlink" title="制作词云"></a>制作词云</h5><pre><code class="python">import wordcloudfrom matplotlib.pyplot import imreadimport jiebatxt=open(&#39;danmu.txt&#39;,&#39;r&#39;,encoding=&#39;UTF-8&#39;).read()ls=jieba.lcut(txt)content=&#39; &#39;.join(ls)print(content)mk=imread(&#39;C:/Users/ASUS/Pictures/sui1.jpg&#39;)w=wordcloud.WordCloud(font_path=&#39;msyh.ttc&#39;,width=700,height=1000,background_color=&#39;white&#39;,mask=mk)w.generate(content)w.to_file(&#39;sui.png&#39;)</code></pre><h3 id="任务分析"><a href="#任务分析" class="headerlink" title="任务分析"></a>任务分析</h3><p>首先爬取弹幕制作词云任务很明显的分为两个部分：数据爬取和数据分析。数据爬取时我们需要爬取B站的弹幕信息，但是由于弹幕信息并非直接显示在当前视频页面的html下，所以我们必须使用’检查‘来寻找存放弹幕信息的xml。爬取好了的弹幕我们需要进行处理，裁取出有效的部分，再进行词频的统计以及词云的制作。</p><h5 id="弹幕爬取"><a href="#弹幕爬取" class="headerlink" title="弹幕爬取"></a>弹幕爬取</h5><p>在这个程序中，我们首先使用requests库进行网页爬取，但是由于这个例子比较简单，你也可以使用python自带的网络爬虫工具来完成。</p><p>由于B站弹幕页面header的编码格式并不是支持中文的utf-8，所以我们要更改页面编码格式，你可以把编码格式手动改为utf-8，也可以将编码格式改成页面实际编码格式。</p><p>然后我们可以使用r.text获得页面的所有信息。如果你还想再看一次的话，使用print()函数。</p><pre><code class="python">import requestsr=requests.get(&#39;https://api.bilibili.com/x/v1/dm/list.so?oid=&#39;+oid)r.encoding=r.apparent_encodinghtml=r.textprint(html)</code></pre><h5 id="弹幕裁取"><a href="#弹幕裁取" class="headerlink" title="弹幕裁取"></a>弹幕裁取</h5><p>在爬取好页面信息html后，我们使用BeautifulSoup库进行html页面的解析。将html解析成beautifulsoup类。</p><pre><code class="python">soup=BeautifulSoup(html,&#39;html.parser&#39;)</code></pre><p>在任务执行前对页面的分析或者刚刚我们用print()函数所看到的页面信息中，我们可以发现：弹幕内容被存放到了<b>中的字符串中。所以我们可以通过soup.find_all()来获得所有b标签。然后我们使用一个for循环获得单个标签，再通过tag.string 来获得b标签的字符串内容，即我们所需要的弹幕内容。</b></p><pre><code>ls=soup.find_all(&#39;d&#39;)danmu=&#39;&#39;for i in ls:   content=&#39;&#39;.join(i.string)   danmu+=content</code></pre><p>当然，你要是不嫌烦的话，可以按照网上许多教程所说的那样获得b标签的所有内容，然后再用正则表达式截取出弹幕内容。当然这样就比较麻烦，显然辜负了B站程序员们清楚的代码风格。<del>但是这锻炼了你正则表达式的熟练度。</del></p><pre><code class="python">content=str(ls)pattern=re.compile(&#39;&lt;d.*?&gt;(.*?)&lt;/d&gt;&#39;)danmu=pattern.findall(content)</code></pre><h5 id="词云制作"><a href="#词云制作" class="headerlink" title="词云制作"></a>词云制作</h5><p>最后我们需要制作词云，由于B站弹幕绝大部分是中文，我们可以使用jieba库对弹幕内容进行分词。如果你想要更好的分词结果：比如支持日文和其他语言，你可能需要其他的工具支持。</p><pre><code class="python">import jiebatxt=open(&#39;danmu.txt&#39;,&#39;r&#39;,encoding=&#39;UTF-8&#39;).read()ls=jieba.lcut(txt)content=&#39; &#39;.join(ls)     #空格分隔词语，方便下一步词云的制作print(content)            #检查</code></pre><p>分词后我们就可以使用Wordcloud库进行词云制作了。如果你想要制作一个特别的词云，你可能需要mask的支持。mask可以理解为蒙版，可以使你的词云呈现特定的形状。你需要使用matplotlib.pyplot库来读取你的图片mask。最后将词云文件保存，任务完成。最后我们得到的结果如下：<img src="/2020/04/03/%E7%88%AC%E5%8F%96B%E7%AB%99%E5%BC%B9%E5%B9%95%E4%BF%A1%E6%81%AF%E5%88%B6%E4%BD%9C%E8%AF%8D%E4%BA%91/E:%5Cblog%5Csource_posts%5C%E7%88%AC%E5%8F%96B%E7%AB%99%E5%BC%B9%E5%B9%95%E4%BF%A1%E6%81%AF%E5%88%B6%E4%BD%9C%E8%AF%8D%E4%BA%91%5Csui.png" srcset="/img/loading.gif" alt></p><pre><code class="python">import wordcloudfrom matplotlib.pyplot import imreadmk=imread(&#39;C:/Users/ASUS/Pictures/sui1.jpg&#39;)w=wordcloud.WordCloud(font_path=&#39;msyh.ttc&#39;,width=700,height=1000,background_color=&#39;white&#39;,mask=mk)w.generate(content)w.to_file(&#39;sui.png&#39;)</code></pre><p>当然，这个任务还有很多可以优化的地方，比如我们可以直接通过BV号获得oid，而不用去寻找视频的oid；我们可以批量获得一个用户的所有视频的数据，制作数据量更大的词云；我们还可以支持多语言的分词，设置词表来达到更好的分词效果。有空我会继续更新。</p><h3 id="优化1：直接通过BV号获得oid"><a href="#优化1：直接通过BV号获得oid" class="headerlink" title="优化1：直接通过BV号获得oid"></a>优化1：直接通过BV号获得oid</h3><h3 id="优化2：批量获得一个用户的所有视频的数据"><a href="#优化2：批量获得一个用户的所有视频的数据" class="headerlink" title="优化2：批量获得一个用户的所有视频的数据"></a>优化2：批量获得一个用户的所有视频的数据</h3><h3 id="优化3：更好的分词效果"><a href="#优化3：更好的分词效果" class="headerlink" title="优化3：更好的分词效果"></a>优化3：更好的分词效果</h3>]]></content>
+    
+    
+    <categories>
+      
+      <category>python</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>-爬虫
+-B站</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>我的博客说明</title>
     <link href="/2020/04/02/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87blog/"/>
     <url>/2020/04/02/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87blog/</url>
     
-    <content type="html"><![CDATA[<h1 id="我的第一篇blog"><a href="#我的第一篇blog" class="headerlink" title="我的第一篇blog"></a>我的第一篇blog</h1><h3 id="为啥整了这个玩意"><a href="#为啥整了这个玩意" class="headerlink" title="为啥整了这个玩意"></a>为啥整了这个玩意</h3><p>其实说实在的也没有什么原因，在翻关注的up主‘codesheep’的视频时看到了有教怎么用hexo搭建个人博客的。<del>正好我今天也不怎么想学习</del>，于是就整了一个…虽然但是，整这个的过程真的挺麻烦的，如果有感兴趣的也可以去看一下（因为他是macOS系统，所以Windows上有很多操作不一样，建议开着弹幕看）。</p><h3 id="要用这玩意干啥"><a href="#要用这玩意干啥" class="headerlink" title="要用这玩意干啥"></a>要用这玩意干啥</h3><p>毕竟是心血来潮弄的博客，所以具体要做什么也没有很清楚的想法。但是出于不想要和其他平台的功能重复，所以这边基本上是不会发一些随笔之类的，主要会围绕编程、视频剪辑相关的比较偏所谓‘极客’一点的东西。</p><p>目前的想法是每月计划，每周学习总结之类的都会发上来。毕竟要真写纯技术类的我可能要先自我禁言五六个月…</p><h3 id="其他相关"><a href="#其他相关" class="headerlink" title="其他相关"></a>其他相关</h3><p>暂时也没有什么要说的了，どぞ、よろしくお願いします！</p>]]></content>
+    <content type="html"><![CDATA[<h3 id="为啥整了这个玩意"><a href="#为啥整了这个玩意" class="headerlink" title="为啥整了这个玩意"></a>为啥整了这个玩意</h3><p>其实说实在的也没有什么原因，在翻关注的up主‘codesheep’的视频时看到了有教怎么用hexo搭建个人博客的。<del>正好我今天也不怎么想学习</del>，于是就整了一个…虽然但是，整这个的过程真的挺麻烦的，如果有感兴趣的也可以去看一下（因为他是macOS系统，所以Windows上有很多操作不一样，建议开着弹幕看）。</p><h3 id="要用这玩意干啥"><a href="#要用这玩意干啥" class="headerlink" title="要用这玩意干啥"></a>要用这玩意干啥</h3><p>毕竟是心血来潮弄的博客，所以具体要做什么也没有很清楚的想法。但是出于不想要和其他平台的功能重复，所以这边基本上是不会发一些随笔之类的，主要会围绕编程、视频剪辑相关的比较偏所谓‘极客’一点的东西。</p><p>目前的想法是每月计划，每周学习总结之类的都会发上来。毕竟要真写纯技术类的我可能要先自我禁言五六个月…</p><h3 id="其他相关"><a href="#其他相关" class="headerlink" title="其他相关"></a>其他相关</h3><p>暂时也没有什么要说的了，どぞ、よろしくお願いします！</p>]]></content>
     
     
+    <categories>
+      
+      <category>-计划</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>-生活
+-计划</tag>
+      
+    </tags>
     
   </entry>
   
