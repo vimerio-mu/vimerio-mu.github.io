@@ -128,7 +128,7 @@
                   
                   <span class="post-meta">
                     <i class="far fa-chart-bar"></i>
-                    1.3k 字
+                    1.6k 字
                   </span>
                 
 
@@ -138,7 +138,7 @@
                       <i class="far fa-clock"></i>
                     
                     
-                    16
+                    20
                      分钟
                   </span>
                 
@@ -255,7 +255,32 @@ w=wordcloud.WordCloud(font_path=&#39;msyh.ttc&#39;,width=700,height=1000,backgro
 w.generate(content)
 w.to_file(&#39;sui.png&#39;)</code></pre>
 <p>当然，这个任务还有很多可以优化的地方，比如我们可以直接通过BV号获得oid，而不用去寻找视频的oid；我们可以批量获得一个用户的所有视频的数据，制作数据量更大的词云；我们还可以支持多语言的分词，设置词表来达到更好的分词效果。有空我会继续更新。</p>
-<h3 id="优化1：直接通过BV号获得oid"><a href="#优化1：直接通过BV号获得oid" class="headerlink" title="优化1：直接通过BV号获得oid"></a>优化1：直接通过BV号获得oid</h3><h3 id="优化2：批量获得一个用户的所有视频的数据"><a href="#优化2：批量获得一个用户的所有视频的数据" class="headerlink" title="优化2：批量获得一个用户的所有视频的数据"></a>优化2：批量获得一个用户的所有视频的数据</h3><h3 id="优化3：更好的分词效果"><a href="#优化3：更好的分词效果" class="headerlink" title="优化3：更好的分词效果"></a>优化3：更好的分词效果</h3>
+<h3 id="优化1：直接通过BV号获得oid（4-4完成）"><a href="#优化1：直接通过BV号获得oid（4-4完成）" class="headerlink" title="优化1：直接通过BV号获得oid（4.4完成）"></a>优化1：直接通过BV号获得oid（4.4完成）</h3><p>如果直接使用requests库的get去爬取页面的话，我们无法看到视频的oid，所以为了模拟人真实的行为来获得我们所需要的数据，我们需要使用selenium库来模仿一个浏览器进行操作。</p>
+<pre><code class="python">from selenium import webdriver
+driver=webdriver.Firefox()
+driver.get(&#39;https://www.bilibili.com/video/&#39;+bv)</code></pre>
+<p>上面我们模拟了火狐浏览器对url进行访问，这时候我们就可以做到所见即所得了。</p>
+<p>对视频url进行爬取之后我们需要对我们获得的无比复杂的视频源页面的oid进行分析，具体过程如下：</p>
+<pre><code class="python">soup=BeautifulSoup(html,&#39;html.parser&#39;)
+content=soup.find(string=re.compile(r&#39;.bilivideo.com/upgcxcode&#39;))
+a=&#39;&#39;
+a+=content
+b=a.split(&#39;base_url&#39;)
+c=&#39;&#39;
+c+=b[0]
+d=c.split(&#39;upgcxcode&#39;)
+e=&#39;&#39;
+e+=d[1]
+content=e.split(&#39;/&#39;,4)
+oid=content[3]</code></pre>
+<p>这里的思路就是用split不断进行切割，最后得到视频的oid。</p>
+<p>接下来的步骤就和之前一样了。</p>
+<h3 id="优化2：批量获得一个用户的所有视频的数据（4-4完成）"><a href="#优化2：批量获得一个用户的所有视频的数据（4-4完成）" class="headerlink" title="优化2：批量获得一个用户的所有视频的数据（4.4完成）"></a>优化2：批量获得一个用户的所有视频的数据（4.4完成）</h3><p>想了想很简单，其实优化1和2对之前的我的关键难点就是无法模拟人的操作，在掌握了selenium之后这些难题就迎刃而解了。</p>
+<p>这个优化可以这样实现：</p>
+<p>1.获取用户的uid并访问其空间</p>
+<p>2.获取空间中的视频bv号</p>
+<p>3.沿用优化1的方法</p>
+<h3 id="优化3：更好的分词效果"><a href="#优化3：更好的分词效果" class="headerlink" title="优化3：更好的分词效果"></a>优化3：更好的分词效果</h3>
             </div>
             <hr>
             <div>
