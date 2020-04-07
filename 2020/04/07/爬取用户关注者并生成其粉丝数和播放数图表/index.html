@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
-  <title>爬取用户关注者并生成其粉丝数和播放数图表 - Vimerio</title>
+  <title>爬取B站弹幕信息制作词云 - Vimerio</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/5.12.1/css/all.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
@@ -190,7 +190,11 @@ for tag in tags:
 pattern=re.compile(r&#39;\d+&#39;)
 uids=pattern.findall(uid_href)
 uids=list(set(uids))</code></pre>
-<h4 id="第二部分"><a href="#第二部分" class="headerlink" title="第二部分"></a>第二部分</h4><p>这一步我们要获得up主的粉丝数和播放数。如果尝试过你就会发现：这两个数据不是静态的存在于当前页面的源代码中的，而是有一个api将数据传给当前页面的。我们经过观察可以发现API的url分别为：‘<a href="https://api.bilibili.com/x/relation/stat?vmid=’+uid(粉丝)和&#39;https://api.bilibili.com/x/relation/stat?vmid=&#39;+uid（播放）。接下来我们就获得里面的数据并存为列表就可以了。" target="_blank" rel="noopener">https://api.bilibili.com/x/relation/stat?vmid=’+uid(粉丝)和&#39;https://api.bilibili.com/x/relation/stat?vmid=&#39;+uid（播放）。接下来我们就获得里面的数据并存为列表就可以了。</a></p>
+<h4 id="第二部分"><a href="#第二部分" class="headerlink" title="第二部分"></a>第二部分</h4><p>这一步我们要获得up主的粉丝数和播放数。如果尝试过你就会发现：这两个数据不是静态的存在于当前页面的源代码中的，而是有一个api将数据传给当前页面的。我们经过观察可以发现API的url分别为：</p>
+<p>‘<a href="https://api.bilibili.com/x/relation/stat?vmid=’+uid" target="_blank" rel="noopener">https://api.bilibili.com/x/relation/stat?vmid=’+uid</a>     (粉丝)</p>
+<p>和</p>
+<p>‘<a href="https://api.bilibili.com/x/relation/stat?vmid=&#39;+uid" target="_blank" rel="noopener">https://api.bilibili.com/x/relation/stat?vmid=&#39;+uid</a>   （播放）</p>
+<p>接下来我们就获得里面的数据并存为列表就可以了。</p>
 <pre><code class="python">#获得粉丝数
 followers=[]
 for i in range(0,len(uids)):
@@ -344,6 +348,21 @@ c = (
             <div>
               <p>
                 
+                  <span>
+                <i class="iconfont icon-inbox"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/python/">python</a>
+                      &nbsp;
+                    
+                  </span>&nbsp;&nbsp;
+                
+                
+                  <span>
+                <i class="iconfont icon-tag"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%88%AC%E8%99%AB-B%E7%AB%99-%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%86%E5%8C%96/">-爬虫 -B站 -数据可视化</a>
+                    
+                  </span>
                 
               </p>
               
@@ -544,7 +563,7 @@ c = (
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "爬取用户关注者并生成其粉丝数和播放数图表&nbsp;",
+        "爬取B站弹幕信息制作词云&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
