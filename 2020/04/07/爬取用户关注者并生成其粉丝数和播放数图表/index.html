@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
-  <title>爬取B站弹幕信息制作词云 - Vimerio</title>
+  <title>爬取用户关注者并生成其粉丝数和播放数图表 - Vimerio</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/5.12.1/css/all.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
@@ -119,7 +119,7 @@
               
                 <p class="mt-3 post-meta">
                   <i class="fas fa-calendar-alt" aria-hidden="true"></i>
-                  Friday, April 3rd 2020, 9:15 am
+                  Tuesday, April 7th 2020, 9:49 am
                 </p>
               
 
@@ -128,7 +128,7 @@
                   
                   <span class="post-meta">
                     <i class="far fa-chart-bar"></i>
-                    1.6k 字
+                    1.7k 字
                   </span>
                 
 
@@ -138,7 +138,7 @@
                       <i class="far fa-clock"></i>
                     
                     
-                    20
+                    25
                      分钟
                   </span>
                 
@@ -167,141 +167,183 @@
           <div class="post-content mx-auto" id="post">
             
             <div class="markdown-body">
-              <h3 id="代码部分"><a href="#代码部分" class="headerlink" title="代码部分"></a>代码部分</h3><h5 id="获得弹幕"><a href="#获得弹幕" class="headerlink" title="获得弹幕"></a>获得弹幕</h5><pre><code class="python">import re
-import requests
-import bs4
-from bs4 import BeautifulSoup
-
-#获取弹幕
-def getDM(oid):
-    r=requests.get(&#39;https://api.bilibili.com/x/v1/dm/list.so?oid=&#39;+oid)
-    r.encoding=r.apparent_encoding
-    return r.text
-#截取有效弹幕部分
-def cutDM(html):
-    soup=BeautifulSoup(html,&#39;html.parser&#39;)
-    ls=soup.find_all(&#39;d&#39;)
-    danmu=&#39;&#39;
-    for i in ls:
-        content=&#39;&#39;.join(i.string)
-        danmu+=content
-    #content=str(ls)
-    #pattern=re.compile(&#39;&lt;d.*?&gt;(.*?)&lt;/d&gt;&#39;)
-    #danmu=pattern.findall(content)
-    return danmu
-
-def saveDM(danmu):
-    f=open(&#39;danmu.txt&#39;,&#39;wt&#39;,encoding=&#39;utf-8&#39;)
-    danmu=str(danmu)
-    f.write(danmu)
-def main():
-    oid=input(&#39;请输入oid:&#39;)
-    html=getDM(oid)
-    danmu=cutDM(html)
-    saveDM(danmu)
-
-
-main()
-</code></pre>
-<h5 id="制作词云"><a href="#制作词云" class="headerlink" title="制作词云"></a>制作词云</h5><pre><code class="python">import wordcloud
-from matplotlib.pyplot import imread
-import jieba
-
-txt=open(&#39;danmu.txt&#39;,&#39;r&#39;,encoding=&#39;UTF-8&#39;).read()
-ls=jieba.lcut(txt)
-content=&#39; &#39;.join(ls)
-print(content)
-
-mk=imread(&#39;C:/Users/ASUS/Pictures/sui1.jpg&#39;)
-w=wordcloud.WordCloud(font_path=&#39;msyh.ttc&#39;,width=700,height=1000,background_color=&#39;white&#39;,mask=mk)
-
-w.generate(content)
-w.to_file(&#39;sui.png&#39;)
-</code></pre>
-<h3 id="任务分析"><a href="#任务分析" class="headerlink" title="任务分析"></a>任务分析</h3><p>首先爬取弹幕制作词云任务很明显的分为两个部分：数据爬取和数据分析。数据爬取时我们需要爬取B站的弹幕信息，但是由于弹幕信息并非直接显示在当前视频页面的html下，所以我们必须使用’检查‘来寻找存放弹幕信息的xml。爬取好了的弹幕我们需要进行处理，裁取出有效的部分，再进行词频的统计以及词云的制作。</p>
-<h5 id="弹幕爬取"><a href="#弹幕爬取" class="headerlink" title="弹幕爬取"></a>弹幕爬取</h5><p>在这个程序中，我们首先使用requests库进行网页爬取，但是由于这个例子比较简单，你也可以使用python自带的网络爬虫工具来完成。</p>
-<p>由于B站弹幕页面header的编码格式并不是支持中文的utf-8，所以我们要更改页面编码格式，你可以把编码格式手动改为utf-8，也可以将编码格式改成页面实际编码格式。</p>
-<p>然后我们可以使用r.text获得页面的所有信息。如果你还想再看一次的话，使用print()函数。</p>
-<pre><code class="python">import requests
-r=requests.get(&#39;https://api.bilibili.com/x/v1/dm/list.so?oid=&#39;+oid)
-r.encoding=r.apparent_encoding
-html=r.text
-print(html)</code></pre>
-<h5 id="弹幕裁取"><a href="#弹幕裁取" class="headerlink" title="弹幕裁取"></a>弹幕裁取</h5><p>在爬取好页面信息html后，我们使用BeautifulSoup库进行html页面的解析。将html解析成beautifulsoup类。</p>
-<pre><code class="python">soup=BeautifulSoup(html,&#39;html.parser&#39;)</code></pre>
-<p>在任务执行前对页面的分析或者刚刚我们用print()函数所看到的页面信息中，我们可以发现：弹幕内容被存放到了d标签中的字符串中。所以我们可以通过soup.find_all()来获得所有d标签。然后我们使用一个for循环获得单个标签，再通过tag.string 来获得b标签的字符串内容，即我们所需要的弹幕内容。</p>
-<pre><code>ls=soup.find_all(&#39;d&#39;)
-danmu=&#39;&#39;
-for i in ls:
-   content=&#39;&#39;.join(i.string)
-   danmu+=content</code></pre><p>当然，你要是不嫌烦的话，可以按照网上许多教程所说的那样获得d标签的所有内容，然后再用正则表达式截取出弹幕内容。当然这样就比较麻烦，显然辜负了B站程序员们清楚的代码风格。<del>但是这锻炼了你正则表达式的熟练度。</del></p>
-<pre><code class="python">content=str(ls)
-pattern=re.compile(&#39;&lt;d.*?&gt;(.*?)&lt;/d&gt;&#39;)
-danmu=pattern.findall(content)</code></pre>
-<h5 id="词云制作"><a href="#词云制作" class="headerlink" title="词云制作"></a>词云制作</h5><p>最后我们需要制作词云，由于B站弹幕绝大部分是中文，我们可以使用jieba库对弹幕内容进行分词。如果你想要更好的分词结果：比如支持日文和其他语言，你可能需要其他的工具支持。</p>
-<pre><code class="python">import jieba
-
-txt=open(&#39;danmu.txt&#39;,&#39;r&#39;,encoding=&#39;UTF-8&#39;).read()
-ls=jieba.lcut(txt)
-content=&#39; &#39;.join(ls)     #空格分隔词语，方便下一步词云的制作
-print(content)            #检查</code></pre>
-<p>分词后我们就可以使用Wordcloud库进行词云制作了。如果你想要制作一个特别的词云，你可能需要mask的支持。mask可以理解为蒙版，可以使你的词云呈现特定的形状。你需要使用matplotlib.pyplot库来读取你的图片mask。最后将词云文件保存，任务完成。最后我们得到的结果如下：<a href="https://i0.hdslb.com/bfs/article/a5e10612fb16472ee91bac1526905ad1eff81e1e.png@1036w_1380h.webp" target="_blank" rel="noopener">词云效果</a></p>
-<pre><code class="python">import wordcloud
-from matplotlib.pyplot import imread
-
-mk=imread(&#39;C:/Users/ASUS/Pictures/sui1.jpg&#39;)
-w=wordcloud.WordCloud(font_path=&#39;msyh.ttc&#39;,width=700,height=1000,background_color=&#39;white&#39;,mask=mk)
-
-w.generate(content)
-w.to_file(&#39;sui.png&#39;)</code></pre>
-<p>当然，这个任务还有很多可以优化的地方，比如我们可以直接通过BV号获得oid，而不用去寻找视频的oid；我们可以批量获得一个用户的所有视频的数据，制作数据量更大的词云；我们还可以支持多语言的分词，设置词表来达到更好的分词效果。有空我会继续更新。</p>
-<h3 id="优化1：直接通过BV号获得oid（4-4完成）"><a href="#优化1：直接通过BV号获得oid（4-4完成）" class="headerlink" title="优化1：直接通过BV号获得oid（4.4完成）"></a>优化1：直接通过BV号获得oid（4.4完成）</h3><p>如果直接使用requests库的get去爬取页面的话，我们无法看到视频的oid，所以为了模拟人真实的行为来获得我们所需要的数据，我们需要使用selenium库来模仿一个浏览器进行操作。</p>
+              <h2 id="项目起因"><a href="#项目起因" class="headerlink" title="项目起因"></a>项目起因</h2><p>其实我从很久之前看了B站相关的数据可视化视频之后就很想尝试一下，但是一直没有动力。正好最近在推vtuber，想着为圈子做些贡献，并且WHUer无学可上，闲着也是闲着。我就自学了一些网络爬虫和数据可视化，虽然不多但是勉强够用，于是就开始了这个项目。</p>
+<h2 id="项目设计"><a href="#项目设计" class="headerlink" title="项目设计"></a>项目设计</h2><p>简单的来说这个项目可以分成三个部分：</p>
+<h4 id="1-根据uid访问用户关注页并获得其关注者的信息（uid）"><a href="#1-根据uid访问用户关注页并获得其关注者的信息（uid）" class="headerlink" title="1.根据uid访问用户关注页并获得其关注者的信息（uid）"></a>1.根据uid访问用户关注页并获得其关注者的信息（uid）</h4><h4 id="2-根据获得的up主uid逐一访问他们的粉丝页并且找到粉丝数和播放量的api"><a href="#2-根据获得的up主uid逐一访问他们的粉丝页并且找到粉丝数和播放量的api" class="headerlink" title="2.根据获得的up主uid逐一访问他们的粉丝页并且找到粉丝数和播放量的api"></a>2.根据获得的up主uid逐一访问他们的粉丝页并且找到粉丝数和播放量的api</h4><h4 id="3-整理数据并制作图表"><a href="#3-整理数据并制作图表" class="headerlink" title="3.整理数据并制作图表"></a>3.整理数据并制作图表</h4><p>下面我来分别介绍项目的三个部分。</p>
+<h2 id="项目实现"><a href="#项目实现" class="headerlink" title="项目实现"></a>项目实现</h2><h4 id="第一部分"><a href="#第一部分" class="headerlink" title="第一部分"></a>第一部分</h4><p>之前我们已经实现了根据uid获得用户简介和名称。其实原理完全一样，只不过换了网页。但是不同之处在于这里我们要用selenium来模拟浏览器，不然无法看到相关信息。</p>
 <pre><code class="python">from selenium import webdriver
+from bs4 import BeautifulSoup
+import re
+
+user=input(&#39;请输入你的uid号：&#39;)
+uid_href=&#39;&#39;
+href=[]
 driver=webdriver.Firefox()
-driver.get(&#39;https://www.bilibili.com/video/&#39;+bv)</code></pre>
-<p>上面我们模拟了火狐浏览器对url进行访问，这时候我们就可以做到所见即所得了。</p>
-<p>对视频url进行爬取之后我们需要对我们获得的无比复杂的视频源页面的oid进行分析，具体过程如下：</p>
-<pre><code class="python">soup=BeautifulSoup(html,&#39;html.parser&#39;)
-content=soup.find(string=re.compile(r&#39;.bilivideo.com/upgcxcode&#39;))
-a=&#39;&#39;
-a+=content
-b=a.split(&#39;base_url&#39;)
-c=&#39;&#39;
-c+=b[0]
-d=c.split(&#39;upgcxcode&#39;)
-e=&#39;&#39;
-e+=d[1]
-content=e.split(&#39;/&#39;,4)
-oid=content[3]</code></pre>
-<p>这里的思路就是用split不断进行切割，最后得到视频的oid。</p>
-<p>接下来的步骤就和之前一样了。</p>
-<h3 id="优化2：批量获得一个用户的所有视频的数据（4-4完成）"><a href="#优化2：批量获得一个用户的所有视频的数据（4-4完成）" class="headerlink" title="优化2：批量获得一个用户的所有视频的数据（4.4完成）"></a>优化2：批量获得一个用户的所有视频的数据（4.4完成）</h3><p>想了想很简单，其实优化1和2对之前的我的关键难点就是无法模拟人的操作，在掌握了selenium之后这些难题就迎刃而解了。</p>
-<p>这个优化可以这样实现：</p>
-<p>1.获取用户的uid并访问其空间</p>
-<p>2.获取空间中的视频bv号</p>
-<p>3.沿用优化1的方法</p>
-<h3 id="优化3：更好的分词效果"><a href="#优化3：更好的分词效果" class="headerlink" title="优化3：更好的分词效果"></a>优化3：更好的分词效果</h3>
+driver.get(&#39;https://space.bilibili.com/&#39;+user+&#39;/fans/follow&#39;)
+html=driver.page_source
+soup=BeautifulSoup(html,&#39;html.parser&#39;)
+tags=soup.find_all(attrs={&#39;href&#39;:re.compile(r&quot;//space.bilibili.com/(\d+)/&quot;)})
+for tag in tags:
+    if &#39;href&#39; in tag.attrs:
+        href+=tag.attrs[&#39;href&#39;]
+    uid_href=&#39;&#39;.join(href)
+pattern=re.compile(r&#39;\d+&#39;)
+uids=pattern.findall(uid_href)
+uids=list(set(uids))</code></pre>
+<h4 id="第二部分"><a href="#第二部分" class="headerlink" title="第二部分"></a>第二部分</h4><p>这一步我们要获得up主的粉丝数和播放数。如果尝试过你就会发现：这两个数据不是静态的存在于当前页面的源代码中的，而是有一个api将数据传给当前页面的。我们经过观察可以发现API的url分别为：‘<a href="https://api.bilibili.com/x/relation/stat?vmid=’+uid(粉丝)和&#39;https://api.bilibili.com/x/relation/stat?vmid=&#39;+uid（播放）。接下来我们就获得里面的数据并存为列表就可以了。" target="_blank" rel="noopener">https://api.bilibili.com/x/relation/stat?vmid=’+uid(粉丝)和&#39;https://api.bilibili.com/x/relation/stat?vmid=&#39;+uid（播放）。接下来我们就获得里面的数据并存为列表就可以了。</a></p>
+<pre><code class="python">#获得粉丝数
+followers=[]
+for i in range(0,len(uids)):
+    driver.get(&#39;https://api.bilibili.com/x/relation/stat?vmid=&#39;+uids[i])
+    html=driver.page_source
+    soup=BeautifulSoup(html,&#39;html.parser&#39;)
+    data=soup.find(&#39;div&#39;,id=&#39;json&#39;)
+    data=data.string
+    data=data.split(&#39;&quot;follower&quot;:&#39;)
+    follower=data[-1].split(&#39;}}&#39;)
+    followers+=follower
+    followers= [i for i in followers if i != &#39;&#39;]
+#获得播放量
+views=&#39;&#39;  
+for i in range(0,len(uids)):
+    driver.get(&#39;https://api.bilibili.com/x/space/upstat?mid=&#39;+uids[i])
+    html=driver.page_source
+    soup=BeautifulSoup(html,&#39;html.parser&#39;)
+    data=soup.find(&#39;div&#39;,id=&#39;json&#39;)
+    data=data.string
+    data=data.split(&#39;{&quot;code&quot;:0,&quot;message&quot;:&quot;0&quot;,&quot;ttl&quot;:1,&quot;data&quot;:{&quot;archive&quot;:{&quot;view&quot;:&#39;)
+    data=data[1]
+    data=data.split(&#39;},&quot;article&quot;&#39;)
+    view=data[0]+&#39;,&#39;
+    views+=view
+
+views=views.split(&#39;,&#39;)</code></pre>
+<p>当然为了制作包含名字而不是uid的图表，我们还需要获得up主的名称，这里可以直接用到上一篇文章的代码，这里就不再展示。</p>
+<h4 id="第三部分"><a href="#第三部分" class="headerlink" title="第三部分"></a>第三部分</h4><p>最后我们制作图表就可以了，这里我们使用的是echarts的python版本pyecharts，这个工具可以生成动态图标而且有多个主题可以直接使用，很方便。</p>
+<pre><code class="python">from pyecharts import options as opts
+from pyecharts.charts import Bar
+from pyecharts.globals import ThemeType
+
+c = (
+    Bar(init_opts=opts.InitOpts(theme=ThemeType.LIGHT))
+    .add_xaxis(name)
+    .add_yaxis(&quot;粉丝数量&quot;, followers)
+    .add_yaxis(&quot;播放量&quot;, views)
+    .set_global_opts(
+        xaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(rotate=60)),
+        title_opts=opts.TitleOpts(title=&quot;hololive&quot;, subtitle=&quot;粉丝数和播放量&quot;),
+    )
+    .render(&quot;hololive.html&quot;)
+)</code></pre>
+<p>至此，项目全部完成，效果如下：</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>其实我开始项目的五天前还完全不会任何爬虫，也不会数据可视化。学习并做到这些东西我拢共用了可能不到20个小时。这当然不是我有天分什么的。ted有一个演讲叫’<strong>How To Learn Anything You Want In Just 20 Hours</strong>‘，当然前提是1. Deconstruct the skill 2. Learn Enough to Self-Correct 3. Remove Practice Barriers 4. Practice at least 20 hours。</p>
+<p>我觉得编程十分符合这些：1.编程的代码实现调用了许多第三方库，这些第三方库实际帮助你知道了代码的功能区块，帮助你分解了任务。2.代码的实现与否清晰可见。3.我用手机看视频，用电脑写代码，根本没有其他电子设备让我分神了…可能这就是我这段时间执行力比较高的原因吧。</p>
+<h2 id="代码展示（以爬取hololive为例）"><a href="#代码展示（以爬取hololive为例）" class="headerlink" title="代码展示（以爬取hololive为例）"></a>代码展示（以爬取hololive为例）</h2><pre><code class="python">from selenium import webdriver
+import requests
+import selenium
+from bs4 import BeautifulSoup
+import re
+from selenium.webdriver.chrome.options import Options
+import csv
+import xlwt
+
+
+def getuid(uid):
+    url=&#39;https://space.bilibili.com/&#39;+str(uid)
+    r=requests.get(url,timeout=30)
+    return r.text
+
+
+def cutuid(html):
+    soup=BeautifulSoup(html,&#39;html.parser&#39;)
+    ls=soup.find_all(&#39;meta&#39;,content=re.compile(&#39;bilibili&#39;))
+    #获得简介框（因为简介tag包含&#39;bilibili&#39;)
+    content=str(ls)
+    small_content=re.split(&#39;，bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。&quot; name=&quot;description&quot;&gt;\n&lt;/meta&gt;&#39;,content)
+    a=small_content[0]
+    b=re.split(&#39;meta content=&quot;&#39;,a)
+    c=b[1]
+    final_content=re.split(&#39;，&#39;,c,1)
+    name=final_content[0]
+    return name
+
+
+#获得hololive众人的uid，286700005是holo哥的uid
+uid_href=&#39;&#39;
+href=[]
+driver=webdriver.Firefox()
+driver.get(&#39;https://space.bilibili.com/&#39;+user+&#39;/fans/follow&#39;)
+html=driver.page_source
+soup=BeautifulSoup(html,&#39;html.parser&#39;)
+tags=soup.find_all(attrs={&#39;href&#39;:re.compile(r&quot;//space.bilibili.com/(\d+)/&quot;)})
+for tag in tags:
+    if &#39;href&#39; in tag.attrs:
+        href+=tag.attrs[&#39;href&#39;]
+    uid_href=&#39;&#39;.join(href)
+pattern=re.compile(r&#39;\d+&#39;)
+uids=pattern.findall(uid_href)
+uids=list(set(uids))
+
+#获得名称
+name=[]
+for i in range(0,len(uids)):
+    html=getuid(uids[i])
+    name.append(cutuid(html))
+#获得粉丝数
+followers=[]
+for i in range(0,len(uids)):
+    driver.get(&#39;https://api.bilibili.com/x/relation/stat?vmid=&#39;+uids[i])
+    html=driver.page_source
+    soup=BeautifulSoup(html,&#39;html.parser&#39;)
+    data=soup.find(&#39;div&#39;,id=&#39;json&#39;)
+    data=data.string
+    data=data.split(&#39;&quot;follower&quot;:&#39;)
+    follower=data[-1].split(&#39;}}&#39;)
+    followers+=follower
+    followers= [i for i in followers if i != &#39;&#39;]
+#获得播放量
+views=&#39;&#39;  
+for i in range(0,len(uids)):
+    driver.get(&#39;https://api.bilibili.com/x/space/upstat?mid=&#39;+uids[i])
+    html=driver.page_source
+    soup=BeautifulSoup(html,&#39;html.parser&#39;)
+    data=soup.find(&#39;div&#39;,id=&#39;json&#39;)
+    data=data.string
+    data=data.split(&#39;{&quot;code&quot;:0,&quot;message&quot;:&quot;0&quot;,&quot;ttl&quot;:1,&quot;data&quot;:{&quot;archive&quot;:{&quot;view&quot;:&#39;)
+    data=data[1]
+    data=data.split(&#39;},&quot;article&quot;&#39;)
+    view=data[0]+&#39;,&#39;
+    views+=view
+
+views=views.split(&#39;,&#39;)
+print(uids)
+print(name)
+print(followers)
+print(views)
+
+#作图
+from pyecharts import options as opts
+from pyecharts.charts import Bar
+from pyecharts.globals import ThemeType
+
+c = (
+    Bar(init_opts=opts.InitOpts(theme=ThemeType.LIGHT))
+    .add_xaxis(name)
+    .add_yaxis(&quot;粉丝数量&quot;, followers)
+    .add_yaxis(&quot;播放量&quot;, views)
+    .set_global_opts(
+        xaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(rotate=60)),
+        title_opts=opts.TitleOpts(title=&quot;hololive&quot;, subtitle=&quot;粉丝数和播放量&quot;),
+    )
+    .render(&quot;hololive.html&quot;)
+)
+</code></pre>
+<h4 id><a href="#" class="headerlink" title></a></h4>
             </div>
             <hr>
             <div>
               <p>
                 
-                  <span>
-                <i class="iconfont icon-inbox"></i>
-                    
-                      <a class="hover-with-bg" href="/categories/python/">python</a>
-                      &nbsp;
-                    
-                  </span>&nbsp;&nbsp;
-                
-                
-                  <span>
-                <i class="iconfont icon-tag"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/%E7%88%AC%E8%99%AB-B%E7%AB%99/">-爬虫
--B站</a>
-                    
-                  </span>
                 
               </p>
               
@@ -312,18 +354,12 @@ oid=content[3]</code></pre>
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/04/07/%E7%88%AC%E5%8F%96%E7%94%A8%E6%88%B7%E5%85%B3%E6%B3%A8%E8%80%85%E5%B9%B6%E7%94%9F%E6%88%90%E5%85%B6%E7%B2%89%E4%B8%9D%E6%95%B0%E5%92%8C%E6%92%AD%E6%94%BE%E6%95%B0%E5%9B%BE%E8%A1%A8/">
-                        <i class="fa fa-chevron-left"></i>
-                        <span class="hidden-mobile">爬取用户关注者并生成其粉丝数和播放数图表</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </div>
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/04/02/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87blog/">
-                        <span class="hidden-mobile">我的博客说明</span>
+                      <a href="/2020/04/03/%E7%88%AC%E5%8F%96B%E7%AB%99%E5%BC%B9%E5%B9%95%E4%BF%A1%E6%81%AF%E5%88%B6%E4%BD%9C%E8%AF%8D%E4%BA%91/">
+                        <span class="hidden-mobile">爬取B站弹幕信息制作词云</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="fa fa-chevron-right"></i>
                       </a>
@@ -508,7 +544,7 @@ oid=content[3]</code></pre>
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "爬取B站弹幕信息制作词云&nbsp;",
+        "爬取用户关注者并生成其粉丝数和播放数图表&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
