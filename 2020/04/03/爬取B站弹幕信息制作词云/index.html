@@ -245,7 +245,7 @@ txt=open(&#39;danmu.txt&#39;,&#39;r&#39;,encoding=&#39;UTF-8&#39;).read()
 ls=jieba.lcut(txt)
 content=&#39; &#39;.join(ls)     #空格分隔词语，方便下一步词云的制作
 print(content)            #检查</code></pre>
-<p>分词后我们就可以使用Wordcloud库进行词云制作了。如果你想要制作一个特别的词云，你可能需要mask的支持。mask可以理解为蒙版，可以使你的词云呈现特定的形状。你需要使用matplotlib.pyplot库来读取你的图片mask。最后将词云文件保存，任务完成。最后我们得到的结果如下：<a href="https://i0.hdslb.com/bfs/article/a5e10612fb16472ee91bac1526905ad1eff81e1e.png@1036w_1380h.webp" target="_blank" rel="noopener">词云效果</a></p>
+<p>分词后我们就可以使用Wordcloud库进行词云制作了。如果你想要制作一个特别的词云，你可能需要mask的支持。mask可以理解为蒙版，可以使你的词云呈现特定的形状。你需要使用matplotlib.pyplot库来读取你的图片mask。最后将词云文件保存，任务完成。最后我们得到的结果如下：<a href="http://q8i78k1ua.bkt.clouddn.com/sui.png" target="_blank" rel="noopener">词云效果</a></p>
 <pre><code class="python">import wordcloud
 from matplotlib.pyplot import imread
 

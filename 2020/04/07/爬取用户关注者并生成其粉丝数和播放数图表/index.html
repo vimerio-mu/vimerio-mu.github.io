@@ -193,7 +193,7 @@ uids=list(set(uids))</code></pre>
 <h4 id="第二部分"><a href="#第二部分" class="headerlink" title="第二部分"></a>第二部分</h4><p>这一步我们要获得up主的粉丝数和播放数。如果尝试过你就会发现：这两个数据不是静态的存在于当前页面的源代码中的，而是有一个api将数据传给当前页面的。我们经过观察可以发现API的url分别为：</p>
 <p>‘<a href="https://api.bilibili.com/x/relation/stat?vmid=’+uid" target="_blank" rel="noopener">https://api.bilibili.com/x/relation/stat?vmid=’+uid</a>     (粉丝)</p>
 <p>和</p>
-<p>‘<a href="https://api.bilibili.com/x/relation/stat?vmid=&#39;+uid" target="_blank" rel="noopener">https://api.bilibili.com/x/relation/stat?vmid=&#39;+uid</a>   （播放）</p>
+<p>‘<a href="https://api.bilibili.com/x/space/upstat?mid=&#39;+uid" target="_blank" rel="noopener">https://api.bilibili.com/x/space/upstat?mid=&#39;+uid</a>  （播放）</p>
 <p>接下来我们就获得里面的数据并存为列表就可以了。</p>
 <pre><code class="python">#获得粉丝数
 followers=[]
@@ -240,6 +240,7 @@ c = (
     .render(&quot;hololive.html&quot;)
 )</code></pre>
 <p>至此，项目全部完成，效果如下：</p>
+<p><a href="http://q8i78k1ua.bkt.clouddn.com/hololive.html" target="_blank" rel="noopener">hololive20位vtuber的粉丝数和播放数图表</a></p>
 <h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>其实我开始项目的五天前还完全不会任何爬虫，也不会数据可视化。学习并做到这些东西我拢共用了可能不到20个小时。这当然不是我有天分什么的。ted有一个演讲叫’<strong>How To Learn Anything You Want In Just 20 Hours</strong>‘，当然前提是1. Deconstruct the skill 2. Learn Enough to Self-Correct 3. Remove Practice Barriers 4. Practice at least 20 hours。</p>
 <p>我觉得编程十分符合这些：1.编程的代码实现调用了许多第三方库，这些第三方库实际帮助你知道了代码的功能区块，帮助你分解了任务。2.代码的实现与否清晰可见。3.我用手机看视频，用电脑写代码，根本没有其他电子设备让我分神了…可能这就是我这段时间执行力比较高的原因吧。</p>
 <h2 id="代码展示（以爬取hololive为例）"><a href="#代码展示（以爬取hololive为例）" class="headerlink" title="代码展示（以爬取hololive为例）"></a>代码展示（以爬取hololive为例）</h2><pre><code class="python">from selenium import webdriver
