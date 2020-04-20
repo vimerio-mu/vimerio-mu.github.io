@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>如何做一个还能看的个人博客(1)</title>
+    <link href="/2020/04/20/%E5%A6%82%E4%BD%95%E5%81%9A%E4%B8%80%E4%B8%AA%E8%BF%98%E8%83%BD%E7%9C%8B%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2(1)/"/>
+    <url>/2020/04/20/%E5%A6%82%E4%BD%95%E5%81%9A%E4%B8%80%E4%B8%AA%E8%BF%98%E8%83%BD%E7%9C%8B%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2(1)/</url>
+    
+    <content type="html"><![CDATA[<h2 id="项目起因"><a href="#项目起因" class="headerlink" title="项目起因"></a>项目起因</h2><p>因为想把自己之前做的东西弄成DD-center那样的网页，所以想学一些前端。<del>对我知道这个理由很扯淡</del>，但是我的确这段时间都在学前端，算是把html和css的基础技能都学了一遍吧，一些静态的网页应该是可以做了，<del>可以开始制造电子垃圾了</del>。接下来就要接着学JavaScript和一些框架（比如jQuery和vue.js之类的）了。但在这之前，先来检验一下我前面的学习成果。</p><h2 id="项目设计"><a href="#项目设计" class="headerlink" title="项目设计"></a>项目设计</h2><p>作为一个普通的个人博客，首先要有首页、功能页（个人介绍、标签归总等）、文章详情页三个部分。</p><p>在首页，我希望有一个包含logo和功能页的侧边栏，一个包含文章标题和内容简介的文章列表栏。</p><p>在功能页和详情页，我希望沿用主页的基本设计。对于功能页需要包含一些ui可以跳转到B站等网站中我的个人首页；对于文章页，就正常的沿用我md文件的排版就好。</p><p>在想清楚整个网站的构造之后，让我们进入具体的设计。</p><h4 id="首页设计"><a href="#首页设计" class="headerlink" title="首页设计"></a>首页设计</h4><pre><code class="html">&lt;!DOCTYPE html&gt;&lt;html&gt;    &lt;head&gt;        &lt;meta charset=&quot;utf-8&quot; /&gt;        &lt;title&gt;vimerio&#39;s blog&lt;/title&gt;        &lt;link href=&quot;https://cdn.bootcss.com/normalize/8.0.1/normalize.min.css&quot; rel=&quot;stylesheet&quot;&gt;        &lt;link rel=&quot;stylesheet&quot; href=&quot;./css/main.css&quot;/&gt;    &lt;/head&gt;    &lt;body&gt;        &lt;div class=&quot;side-bar&quot;&gt;        &lt;/div&gt;        &lt;div class=&quot;main&quot;&gt;        &lt;/div&gt;    &lt;/body&gt;&lt;/html&gt;</code></pre><p>首先我们设计两个div，分别是side-bar（侧边栏）和main（主要部分即文章列表）。</p><p>在接着介绍之前，我提一下normalize.css这个css文件，这是一个比较通用的初始化css文件，包括但不限于取消body的margin等等，可以达到很好的初始化效果，提升效率必备（<del>懒狗必备</del>）。</p><p>在设计完第一级的标签之后，我们再设计二级和三级标签。</p><pre><code class="html">&lt;div class=&quot;side-bar&quot;&gt;            &lt;div class=&quot;header&quot;&gt;                &lt;a class=&quot;logo&quot;href=&quot;index.html&quot;&gt;&lt;img src=&quot;./img/678.png&quot;&gt;&lt;/a&gt;                &lt;div class=&quot;intro&quot;&gt;&lt;b&gt;WHU SIM freshman&lt;/b&gt;&lt;br/&gt;                &lt;b&gt; learning field:Data Visualization&lt;/b&gt;&lt;br /&gt;                &lt;b&gt;field:NLP&lt;/b&gt;&lt;/div&gt;            &lt;/div&gt;            &lt;div class=&quot;nav&quot;&gt;                &lt;a href=&quot;#&quot; class=&quot;item&quot;&gt;关于我&lt;/a&gt;                &lt;a href=&quot;#&quot; class=&quot;item&quot;&gt;联系我&lt;/a&gt;                &lt;a href=&quot;#&quot; class=&quot;item&quot;&gt;捐赠&lt;/a&gt;            &lt;/div&gt;            &lt;div class=&quot;tag-list&quot;&gt;                &lt;a href=&quot;#&quot; class=&quot;item&quot;&gt;#python&lt;/a&gt;                &lt;a href=&quot;#&quot; class=&quot;item&quot;&gt;#html&lt;/a&gt;                &lt;a href=&quot;#&quot; class=&quot;item&quot;&gt;#tensorflow&lt;/a&gt;            &lt;/div&gt;        &lt;/div&gt;        &lt;div class=&quot;main&quot;&gt;            &lt;div class=&quot;article-list&quot;&gt;                &lt;div class=&quot;item&quot;&gt;                    &lt;a href=&quot;article.html&quot; class=&quot;title&quot;&gt;lorem&lt;/a&gt;                    &lt;div class=&quot;status&quot;&gt;2020-4-1 |标签：#python&lt;/div&gt;                    &lt;div class=&quot;content&quot;&gt;orem&lt;/div&gt;                &lt;/div&gt;            &lt;/div&gt;        &lt;/div&gt;    &lt;/body&gt;</code></pre><p>我在侧边栏中设计了导航栏（nav）和标签索引（tag-list），并且在其下用a标签整了一些超链接。</p><p>在文章列表中定义了item用来存放单个的文章介绍，并且设置了标题（一个可点击的超链接），状态（如你所见：发布时间，标签）。在这之后，我们就可以开始css的设计了。</p><pre><code class="css">body {    background: #454545;    line-height: 1.7;}/*设置整个页面的底色和基本行高（说实话行高1真的太挤了）*/.side-bar{    float: left;    width: 20%;    position: fixed;    box-shadow: 0 0 5px 2px rgba(0,0,0,0.2);    background-color: #555;}/*我习惯所有div都设置成浮动左，然后侧边栏因为东西比较少就20%的宽度就好；因为我希望侧边栏无论何时都可以显示出来，让用户看比较长的文章的时候也可以看到，于是就设置成了fixed；阴影是模仿卡片的设计，这个网页主要都是卡片式设计。*/.side-bar &gt;* {    padding: 10px 15px;}/*&gt;*是表达所有子元素的写法，这样可以比较方便的同时设计nav和tag-list。在这里设置了一下他们之间的距离，这样看起来不会那么挤。*/.main {    float: right;    width: 80%;    color: #454545;}/*文章列表的浮动、宽度、字体颜色。*/img {    width: 220px;    height: 200px;    border-radius: 50%;}/*logo这里就简单整一下长和宽，并且做成圆形（其实是椭圆）*/a,body{    color:snow ;}/*要设置多个标签的时候用逗号就可以了。*/a {    text-decoration: none;}/*取消下划线*/.nav a,.tag-list a {    display: block;    padding: 5px;    color: #888;    -webkit-transition: color 200ms;    -moz-transition:color 200ms ;    -ms-transition:color 200ms ;    -o-transition:color 200ms ;    transition: color 200ms;}/*这里做了一下字体颜色渐变，这样看起来就没那么突兀。可以用transition+tab快速打出上面的东西*/.nav a:hover,.tag-list a:hover {    color: snow;}/*设置hover（点击时）的颜色。*/.nav a {    font-weight: 700;}/*加粗导航栏字体*/.article-list,.article {    margin-right: 30%;    background: #FFFAFA;    padding: 20px 30px;    box-shadow: 0 0 5px 2px rgba(0,0,0,0.2);}/*同样的给文章列表做卡片效果和底色以及间距的设置。其实说实话底色那么暗卡片挺难看出来的不过前面弄了复制一下也方便*/.title {    font-size:22px;    font-weight: 700;    color: #454545;}/*标题加大加粗改色*/.status {    font-size: 13px;    color: #ccc;}/*状态比较不重要，字体小一点颜色浅一点*/item &gt;* {    margin: 10px 0;}/*同样的用&gt;*定义所有子元素，设置内上下边距*/.article-list.item {    margin-bottom: 25px;}/*底部不要靠太近*/</code></pre><p>效果如下：<a href="http://q8i78k1ua.bkt.clouddn.com/html.jpg" target="_blank" rel="noopener">http://q8i78k1ua.bkt.clouddn.com/html.jpg</a></p><h4 id="文章详情页设计"><a href="#文章详情页设计" class="headerlink" title="文章详情页设计"></a>文章详情页设计</h4><p>在这里推荐一下我现在用markdown编辑器Typora，清爽免费业界清流（<del>结一下</del>）。这个软件有一个md转html的功能。于是我的文章详情页设计还没有开始就结束了…</p><h4 id="导航栏和标签集合"><a href="#导航栏和标签集合" class="headerlink" title="导航栏和标签集合"></a>导航栏和标签集合</h4><p>下次再更，下次一定</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>web</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>-html -css</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>爬取用户关注者并生成其粉丝数和播放数图表</title>
     <link href="/2020/04/07/%E7%88%AC%E5%8F%96%E7%94%A8%E6%88%B7%E5%85%B3%E6%B3%A8%E8%80%85%E5%B9%B6%E7%94%9F%E6%88%90%E5%85%B6%E7%B2%89%E4%B8%9D%E6%95%B0%E5%92%8C%E6%92%AD%E6%94%BE%E6%95%B0%E5%9B%BE%E8%A1%A8/"/>
     <url>/2020/04/07/%E7%88%AC%E5%8F%96%E7%94%A8%E6%88%B7%E5%85%B3%E6%B3%A8%E8%80%85%E5%B9%B6%E7%94%9F%E6%88%90%E5%85%B6%E7%B2%89%E4%B8%9D%E6%95%B0%E5%92%8C%E6%92%AD%E6%94%BE%E6%95%B0%E5%9B%BE%E8%A1%A8/</url>
