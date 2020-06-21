@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/bitbug_favicon.ico">
+  <link rel="icon" type="image/png" href="/img/bitbug_favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2E0E3DA">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>Django学习笔记(1) - Vimerio</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/5.12.1/css/all.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/3.0.1/github-markdown.min.css" />
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1067060_qzomjdt8bmp.css">
+
+
+
+  <link  rel="stylesheet" href="/lib/prettify/tomorrow-night-eighties.min.css" />
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>vimerio</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">主页</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">项目</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">标签</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">关于我</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/links/">友情链接</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+                <p class="mt-3 post-meta">
+                  <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+                  Saturday, June 20th 2020, 4:46 pm
+                </p>
+              
+
+              <p class="mt-1">
+                
+                  
+                  <span class="post-meta">
+                    <i class="far fa-chart-bar"></i>
+                    2.2k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta">
+                      <i class="far fa-clock"></i>
+                    
+                    
+                    24
+                     分钟
+                  </span>
+                
+
+                
+              </p>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <div class="markdown-body">
+              <h1 id="什么是Django"><a href="#什么是Django" class="headerlink" title="什么是Django"></a>什么是Django</h1><ul>
+<li>一个web框架<ul>
+<li>可用其快速开发网站</li>
+<li>基于python</li>
+</ul>
+</li>
+<li>“for perfectionsists”<ul>
+<li>安全性高</li>
+<li>可拓展性强</li>
+</ul>
+</li>
+<li>with ddl<ul>
+<li>开发速度较快</li>
+<li>代码量较小，轻量化</li>
+</ul>
+</li>
+</ul>
+<h1 id="Django环境搭建"><a href="#Django环境搭建" class="headerlink" title="Django环境搭建"></a>Django环境搭建</h1><ol>
+<li>python环境（官网下载即可）</li>
+<li>Django环境（pip install django==版本）</li>
+</ol>
+<h1 id="Django基本操作"><a href="#Django基本操作" class="headerlink" title="Django基本操作"></a>Django基本操作</h1><h2 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h2><pre><code>django-admin startproject &lt;项目名&gt;</code></pre><p>生成一个项目文件夹，其下包含一个项目文件夹和一个配置文件manage.py</p>
+<p>项目文件夹下包含四个文件：</p>
+<ol>
+<li>init：python中的固定文件，说明这是一个包，可以被其他程序调用</li>
+<li>setting：Django项目的管理文件</li>
+<li>urls：整个网站的路由控制，整个网站的url，规定哪些url可以访问</li>
+<li>wsgi：部署时需要用到的文件</li>
+</ol>
+<h2 id="响应请求"><a href="#响应请求" class="headerlink" title="响应请求"></a>响应请求</h2><h3 id="如何打开网址？"><a href="#如何打开网址？" class="headerlink" title="如何打开网址？"></a>如何打开网址？</h3><p>这个过程本质上是由客户端向urls发送打开网址的请求，如果网址有效，urls分析网址并整合相关资源，处理请求，响应请求，返回相关内容。这是通过http协议实现的。</p>
+<h3 id="打开网址的方法："><a href="#打开网址的方法：" class="headerlink" title="打开网址的方法："></a>打开网址的方法：</h3><h4 id="写响应内容"><a href="#写响应内容" class="headerlink" title="写响应内容"></a>写响应内容</h4><p>首先在urls.py中import了path方法，path方法返回一个对象（list）放入urlpatterns中</p>
+<pre><code>path(&#39;网址&#39;,调用方法)</code></pre><p>新建views.py,首先</p>
+<pre><code class="python">from django.http import HttpResponse</code></pre>
+<p>然后定义一个方法</p>
+<pre><code class="python">def index(request):
+    return HttpResponse(&quot;Hello World&quot;)</code></pre>
+<p>这其中HttpResponse是一个函数，可以返回内容给网址，即返回给request</p>
+<h4 id="添加到urls中"><a href="#添加到urls中" class="headerlink" title="添加到urls中"></a>添加到urls中</h4><p>首先在urls.py中先 引入views.py</p>
+<pre><code class="python">from . import views
+#.表示同级目录</code></pre>
+<p>然后添加新的网址和写好的响应内容</p>
+<pre><code>path(&#39;&#39;,views.index)
+#什么都不写，就是主页（直接访问）</code></pre><h4 id="启动网站"><a href="#启动网站" class="headerlink" title="启动网站"></a>启动网站</h4><p>进入到项目文件夹下，使用命令行输入</p>
+<pre><code>python manage.py runserver</code></pre><p>如果端口未被占用，则自动将项目部署到本地端口<a href="http://127.0.0.1:8000/，此时就可以访问网址了。正常情况下请求码应为200，若网址错误则返回404，若出现用户错误等其它错误，则返回500。" target="_blank" rel="noopener">http://127.0.0.1:8000/，此时就可以访问网址了。正常情况下请求码应为200，若网址错误则返回404，若出现用户错误等其它错误，则返回500。</a></p>
+<p>总而言之，只有200的时候才可以正常打开网址。</p>
+<p>Django3的版本好像没有了re_path方法了，现在只能用path。</p>
+<h2 id="创建超级用户（管理员）"><a href="#创建超级用户（管理员）" class="headerlink" title="创建超级用户（管理员）"></a>创建超级用户（管理员）</h2><p>进入<a href="http://127.0.0.1:8000/admin，可以看到用户登录界面，此时我们可以在本机创建超级用户。" target="_blank" rel="noopener">http://127.0.0.1:8000/admin，可以看到用户登录界面，此时我们可以在本机创建超级用户。</a></p>
+<p>你需要先用ctrl+c退出当前环境使命令行可操作，你可以用</p>
+<pre><code>python manage.py help</code></pre><p>来查看自己可以使用的方法</p>
+<p>首先必须为项目创建一个数据库才能让项目有所谓“后台”，自然才能有管理员</p>
+<pre><code>python manage.py migrate</code></pre><p>自动在本地生成一个sqlit3的数据库</p>
+<p>然后在用</p>
+<pre><code>pyhon manage.py creatsuperuser</code></pre><p>创建超级用户，输入username和password之后就可以使用，可以不用输入email，即使你的password被提示太简单，你也可以继续使用例如root这样的弱智密码。</p>
+<h2 id="更改网站默认语言"><a href="#更改网站默认语言" class="headerlink" title="更改网站默认语言"></a>更改网站默认语言</h2><p>Django默认的语言是英语（废话），但是你也可以修改为中文，看着舒服点。</p>
+<p>你可以在setting.py下找到LANGUAGE_CODE 这一项，并将其改为</p>
+<pre><code>LANGUAGE_CODE = &#39;zh-Hans&#39;</code></pre><p>Hans表示简体中文，Hant表示繁体中文。</p>
+<h1 id="app相关"><a href="#app相关" class="headerlink" title="app相关"></a>app相关</h1><h2 id="为何要创建基本app"><a href="#为何要创建基本app" class="headerlink" title="为何要创建基本app"></a>为何要创建基本app</h2><p>在网站中，存在很多需要批量重复的内容块：比如在个人博客中，这个内容块可能是文章；在电商网站中，这个内容块可能是具体的商品。在需要批量重复内容块时，有一定的模型可以让我们的开发更加快速。在Django中，这样的内容模型被称为app。</p>
+<h2 id="如何创建app"><a href="#如何创建app" class="headerlink" title="如何创建app"></a>如何创建app</h2><pre><code>python manage.py startapp &lt;应用名称&gt;</code></pre><p>startapp顾名思义就是创建一个app，执行后会在项目文件夹下生成一个名为应用名称的文件夹，下面包含一系列的东西：</p>
+<ol>
+<li>init：与上文一致</li>
+<li>models：即模型，在其中定义具体的模型内容，用class类来定义</li>
+</ol>
+<p>下面来具体讲一下如何定义模型</p>
+<h2 id="定义模型"><a href="#定义模型" class="headerlink" title="定义模型"></a>定义模型</h2><p>进入models.py，定义新的类，注意要继承模型类</p>
+<pre><code class="python">class &lt;aritcla&gt;  (models.Model):
+    title = models.CharField(max_length=30)
+    content = models.TextField()</code></pre>
+<p>学过数据库的同学应该都知道类似的操作，class就像定义一个关系，其中有很多个属性，每个属性有一个域，这里域就用字段类型来定义，其实整体结构和sql语句类似。sql语句中创建表的操作案例如下：</p>
+<pre><code class="sql">CREATE TABLE 花卉
+           (花卉编号 char(8) PRIMARY KEY,
+            花卉名称 char(20),
+            单价 Numeric(8,2),
+            库存量 int,
+            );</code></pre>
+<p>可以看出二者的操作极其相似，你也可以把模型理解成一个二维表。比如article这个模型拥有content和title两个属性，goods这个模型拥有name和price两个属性这样。当然，一个模型不一定只来源于一张表，也可以来自多张表。</p>
+<h2 id="使用模型"><a href="#使用模型" class="headerlink" title="使用模型"></a>使用模型</h2><p>在写好模型之后，我们并不能直接的使用模型，我们必须注册该应用，表示我们会使用该应用，然后将其同步到我们的数据库中。还记得我们创建数据库的指令码？migrate，即迁移，我们必须把我们创建的模型同步到数据库中，这样我们才能在网站上使用它。这时候我们首先在全局设置文件setting中找到installed_app,在列表中将我们的app写入，然后执行以下命令</p>
+<pre><code>python manage.py makemigrations #制造迁移
+python manage.py migrate #正式迁移</code></pre><p>若在你的models.py中没有语法错误等，你就可以正确的create并且apply你的应用，但这时候我们还是不能在网站的admin中找到我们的应用。因为我们只是<strong>CREAT</strong>和<strong>APPLY</strong>了这个app，还没有<strong>REGISTER</strong>这个app。我们需要打开应用文件夹下的admin.py来注册我们的应用。</p>
+<p>首先我们需要引入我们的模型到admin.py中,然后注册我们的模型。</p>
+<pre><code class="python">from .models import Article
+admin.site.register(Article)</code></pre>
+<p>此时，我们就可以在网站的控制后台找到我们的模型了，并且自由的使用了。使用当然也很方便，直接添加就可以了，当然由于我们前面所指定的属性都没有允许空值的存在，所以这里你必须title和content都要有内容。</p>
+<h2 id="显示内容"><a href="#显示内容" class="headerlink" title="显示内容"></a>显示内容</h2><p>如果我们想要在网站中显示我们的模板内容，我们首先要给出一个url来存放我们的内容。而正如我们在为何要创建app中所说，我们创建app就是为了减少重复操作，如果全部手动创建url对我们来说肯定是无法接受的，所以我们就需要一个自动获取对象的方法。</p>
+<p>有相关知识的人应该都想到了，除了title和content以外，我们的article这个app还应该拥有一个类似于id的东西方便我们检索。是的，在迁移到数据库中时，系统已经自动为我们创建了自动增长的主键id，你可以在migration文件夹下找到py文件自己查看。（毕竟sqlite3是一个关系数据库，title和content不一定能成为主键，它就自己创建了一个主键）</p>
+<p>有了这个id，我们就可以方便的展示和查询我们的article了。</p>
+<p>而之后的操作就类似与 响应请求 中的操作，先定义一个方法，再在某个具体的url中调用方法展示内容。</p>
+<hr>
+<p>比如这里我们在app文件夹下的views.py中定义如下方法：</p>
+<pre><code class="python">def article_detail(request,article_id):
+    return HttpResponse(&#39;文章id为: %s&#39; % article_id)</code></pre>
+<p>这样我们就可以返回文章的id</p>
+<p>然后再回到全局的urls.py中</p>
+<pre><code>path(&#39;article/&lt;int:article_id&gt;&#39;,aritcle_detail,name=&#39;1&#39;),</code></pre><p>就可以在<a href="http://127.0.0.1:8000/article/122这样的url看到内容了。" target="_blank" rel="noopener">http://127.0.0.1:8000/article/122这样的url看到内容了。</a></p>
+<p>当然，聪明的人应该已经发现问题了——这个东西并没有真正的调用app…因为我们根本没有122之多的文章，这是一个假的东西，只不过是获得了你输入的id并且在页面中显示…</p>
+<hr>
+<p>要想要获得app中的内容，我们当然要首先引入模型</p>
+<p>在app文件夹下的views.py中</p>
+<pre><code class="python">from .models import Article</code></pre>
+<p>然后通过app.objects.get这一方法通过某些条件获得模型，将模型存入一个对象中,并且检索其中的属性值返回</p>
+<pre><code class="python">def article_detail(request,article_id):
+    article = Article.objects.get(id = article_id)
+    return HttpResponse(&#39;文章标题为: %s 文章内容为: %s&#39; % (article.title, article.content))</code></pre>
+
+            </div>
+            <hr>
+            <div>
+              <p>
+                
+                  <span>
+                <i class="iconfont icon-inbox"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/web/">web</a>
+                      &nbsp;
+                    
+                  </span>&nbsp;&nbsp;
+                
+                
+                  <span>
+                <i class="iconfont icon-tag"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%89%8D%E7%AB%AF/">-前端</a>
+                    
+                  </span>
+                
+              </p>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" target="_blank" rel="nofollow noopener noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/04/20/%E5%A6%82%E4%BD%95%E5%81%9A%E4%B8%80%E4%B8%AA%E8%BF%98%E8%83%BD%E7%9C%8B%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2(1)/">
+                        <span class="hidden-mobile">如何做一个还能看的个人博客(1)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="fa fa-chevron-right"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+              
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc-start"></div>
+<div id="toc">
+  <p class="h5"><i class="far fa-list-alt"></i>&nbsp;TOC</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="fa fa-chevron-up scroll-top-arrow" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/popper.js/1.16.1/umd/popper.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+  <script  src="https://cdn.staticfile.org/tocbot/4.10.0/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var navHeight = $('#navbar').height();
+      var toc = $('#toc');
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+      var tocLimMax = 2 * boardTop + boardCtn.height();
+
+      $(window).scroll(function () {
+        var tocLimMin = $('#toc-start').offset().top - navHeight;
+        var scroH = document.body.scrollTop + document.documentElement.scrollTop;
+
+        if (tocLimMin <= scroH && scroH <= tocLimMax) {
+          toc.css({
+            'display': 'block',
+            'position': 'fixed',
+            'top': navHeight,
+          });
+        } else if (scroH <= tocLimMin) {
+          toc.css({
+            'position': '',
+            'top': '',
+          });
+        } else if (scroH > tocLimMax) {
+          toc.css('display', 'none');
+        }
+      });
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc > p').css('visibility', 'visible');
+      }
+      var offset = boardCtn.css('margin-right')
+      $('#toc-ctn').css({
+        'right': offset
+      })
+    });
+  </script>
+
+
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+
+<!-- Plugins -->
+
+
+
+  <script  src="https://cdn.staticfile.org/prettify/188.0.0/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').each(function () {
+        const pre = $(this);
+        if (pre.find('code.mermaid').length > 0) {
+          return;
+        }
+        pre.addClass('prettyprint  linenums');
+      });
+      prettyPrint();
+    })
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Django学习笔记(1)&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
