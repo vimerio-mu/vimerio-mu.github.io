@@ -128,7 +128,7 @@
                   
                   <span class="post-meta">
                     <i class="far fa-chart-bar"></i>
-                    2.2k 字
+                    2.8k 字
                   </span>
                 
 
@@ -138,7 +138,7 @@
                       <i class="far fa-clock"></i>
                     
                     
-                    24
+                    32
                      分钟
                   </span>
                 
@@ -269,6 +269,33 @@ admin.site.register(Article)</code></pre>
 <pre><code class="python">def article_detail(request,article_id):
     article = Article.objects.get(id = article_id)
     return HttpResponse(&#39;文章标题为: %s 文章内容为: %s&#39; % (article.title, article.content))</code></pre>
+<p>此时如果你要访问article/122，就无法访问，显示DoesNotExist这样的错误，那么为了让用户知道发生了什么，我们需要来处理这个异常。我们可以用404方法来抛出这个异常。</p>
+<pre><code class="python">from django.http import Http404
+def article_detail(request,article_id):
+    try:
+        article = Article.objects.get(id = article_id)
+    except Article.DoesNotExist:
+        raise Http404(&#39;该文章不存在&#39;)
+    return HttpResponse(&#39;文章标题为: %s 文章内容为: %s&#39; % (article.title, article.content))</code></pre>
+<h2 id="使用html模板显示app内容"><a href="#使用html模板显示app内容" class="headerlink" title="使用html模板显示app内容"></a>使用html模板显示app内容</h2><p>你当然可以将html内容全部写在HttpResponse()中，但是这样你会非常的麻烦，而且当你要修改网页内容样式的时候，你还要回到这里修改，十分复杂，前后端代码混合；而且如果你要在多个方法里面使用一个模板也很不方便。于是乎我们建议将模板文件和方法分离。</p>
+<p>你首先需要在app文件夹下创建一个新的文件夹templates，这个名字是在settings里面规定好的，所以你只能用这个名字。当然，如果你仔细观察settings里面的内容你会发现，其中有一个DIRS可以让你填充你写目录，当然这个我们以后再讲。’APP_DIRS’: True表示APP文件夹下的模板文件是有效的，True是默认值。你需要将html模板存入templates文件夹中使其能被获取。</p>
+<hr>
+<p>具体的html模板创建这里就不再多说，有兴趣的可以看我的上一篇文章，（当然更建议系统的学习）。这里主要来讲一下怎么让模板文件读取到你在方法中设置的两个“坑”，也就是两个位置（在上文中为title和content）。</p>
+<p>还记得views.py中事先引入的render方法吗？这个方法可以返回一个http响应,我们需要一个字典来存入我们获得的对象的值，我们可以直接用键去指定值，将article这个对象的值存入context之中</p>
+<pre><code class="python">from django.http import Http404
+def article_detail(request,article_id):
+    try:
+        article = Article.objects.get(id = article_id)
+        context = {}
+        context[&#39;article_obj&#39;] = article
+        return render(request,&#39;html模板地址&#39;，context)
+    except Article.DoesNotExist:
+        raise Http404(&#39;该文章不存在&#39;)
+    return HttpResponse(&#39;文章标题为: %s 文章内容为: %s&#39; % (article.title, article.content))</code></pre>
+<p>那么html模板怎么知道我们的两个值要放在哪里呢？我们要用`{{}}`这样的格式告诉html从哪里读取内容，就比如这样：</p>
+<pre><code class="html">&lt;h2&gt;{{ article_obj.title}}&lt;/h2&gt;
+&lt;p&gt;{{ article_obj.content}}&lt;/p&gt;</code></pre>
+<p>这样我们就可以使用html模板显示app中的内容了。</p>
 
             </div>
             <hr>
