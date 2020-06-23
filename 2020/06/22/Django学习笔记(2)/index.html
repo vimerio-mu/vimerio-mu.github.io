@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/bitbug_favicon.ico">
+  <link rel="icon" type="image/png" href="/img/bitbug_favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2E0E3DA">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>Django学习笔记(2) - Vimerio</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/5.12.1/css/all.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/3.0.1/github-markdown.min.css" />
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1067060_qzomjdt8bmp.css">
+
+
+
+  <link  rel="stylesheet" href="/lib/prettify/tomorrow-night-eighties.min.css" />
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>vimerio</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">主页</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">项目</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">标签</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">关于我</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/links/">友情链接</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+                <p class="mt-3 post-meta">
+                  <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+                  Monday, June 22nd 2020, 11:23 am
+                </p>
+              
+
+              <p class="mt-1">
+                
+                  
+                  <span class="post-meta">
+                    <i class="far fa-chart-bar"></i>
+                    1.9k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta">
+                      <i class="far fa-clock"></i>
+                    
+                    
+                    21
+                     分钟
+                  </span>
+                
+
+                
+              </p>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <div class="markdown-body">
+              <h1 id="进一步的改进"><a href="#进一步的改进" class="headerlink" title="进一步的改进"></a>进一步的改进</h1><p>紧接上文，之前我们已经实现了获取app，并且用模板显示app，其实网站的整体结构已经算是搭建出来了，你已经可以在本地访问一个完整的网站，并且可以很方便的通过admin后台管理你的网站，增删改你的内容。但是这还是不够的。就先假设我们做的是一个静态的个人博客，除了文章的详情页，我们至少要有一个文章的列表来让别人看看我们到底写了什么东西。</p>
+<h2 id="文章列表页面"><a href="#文章列表页面" class="headerlink" title="文章列表页面"></a>文章列表页面</h2><p>那就让我们先来写一个文章列表页面吧，首先一样的让我们先来写方法：</p>
+<pre><code class="python">def article_list(request):
+    articles = Article.object.all()
+    #获取全部的Article
+    context = {}
+    context[&#39;list&#39;] = articles
+    return render(request,&#39;你的文章列表html模板&#39;,context)</code></pre>
+<p>然后一样的创建html模板文件,这里我们要用到循环来遍历每个文章的标题。</p>
+<pre><code class="html">{% for article in list %}  
+<P>  {{list.title}}  </P>
+{% endfor %} </code></pre>
+<p>当然我们还希望点击标题就可以直接跳转到文章页面，那么我们就肯定要使用a标签：</p>
+<pre><code class="html">{% for article in list %}  
+<a href="/article/{{ aricle.id }}">  {{article.title}}  </a>
+{% endfor %} </code></pre>
+<p>最后再在urls把使用这个方法的url写好就可以了,这一步就不再写了。</p>
+<h2 id="后台定制"><a href="#后台定制" class="headerlink" title="后台定制"></a>后台定制</h2><p>在默认情况下，我们的后台界面中article现实的是Article Object(id)，只有再次点击我们才能看到标题和内容，很不方便。我们可以定制app显示的样式，让我们能一眼看出是哪篇文章。</p>
+<p>方法一：在models.py下定义一个方法：</p>
+<pre><code class="python">def __str__(self):
+   return &#39;%s&#39; % self.title
+</code></pre>
+<p>但是不推荐这样做，因为这样实际上是为了区分不同的app，在之后多个app相互引用时更加方便。</p>
+<p>方法二：在admin.py中创建新类并注册：</p>
+<pre><code class="python">class ArticleAdmin(admin.ModelAdmin):
+    list_display = (&#39;id&#39;,&#39;title&#39;,&#39;content&#39;)
+    ording = (&#39;-id&#39;,)
+    #以id排序，-代表倒序
+admin.site.register(Article,ArticleAdmin)</code></pre>
+<h2 id="修改模型"><a href="#修改模型" class="headerlink" title="修改模型"></a>修改模型</h2><p>在我们的article这一模型中，我们只有title和content两个属性，如果这时我们想要增加一个属性比如author之类的，我们就必须要修改我们的模型。其实修改模型只需要在模型里面修改就可以了，不过为了保持数据库的一些要求，你必须设置默认值，因为sqlite3不允许空值。最直接的默认值设定就是default=某个值，不过也有一些其他的方法来获得默认值。具体的方法可以在这里寻找：<a href="https://www.cnblogs.com/lhj588/archive/2012/05/24/2516040.html" target="_blank" rel="noopener">https://www.cnblogs.com/lhj588/archive/2012/05/24/2516040.html</a></p>
+<p>在修改了模型之后，你需要在admin.py的ArticleAdmin类中添加显示的属性，如果你不需要显示的话也可以不加。但是你必须进行数据库迁移的操作，模型才会被改变。</p>
+<p>如果你需要添加的属性来自其他模型，比如说你的author其实是来自于user这个模型里的，这个属性就被叫做外键（来自外部表(模型)的键(属性)）。在引入外键的时候，你必须先引入那个被引用的模型，在设置属性的域时，你必须用models.ForeignKey的方法设置。如果你不想要删除某个属性的时候导致被引用的模型被更改，你需要设置删除时的限制：on_delete = models.DO_NOTHING。（如果你想要一同删除的话，你应该设置为级联CASCADE）</p>
+<pre><code class="python">from django.contrib.auth.models import User
+
+class Article(models.Model):
+    ...
+    author = models.ForeignKey(User,on_delete = models.DO_NOTHING,default = 1)</code></pre>
+<h1 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h1><p>在显示属性时，我们有时想要不同的显示格式，比如在list页面中，如果content太长，就无法很好的显示完整的文章列表；或者在显示时间时，我们不想要具体到时分秒，只要具体到天就可以。我们如何在不更改后台数据的情况下获得不同的显示效果呢？这时我们就要使用过滤器。</p>
+<p>过滤器是跟随在元素之后的，两者中间用|隔开，形如：</p>
+<pre><code class="html">{{ article.content | truncatechars:100 }}</code></pre>
+<p>常用的过滤器可以在这里查看：<a href="https://docs.djangoproject.com/en/3.0/ref/templates/builtins/#built-in-filter-reference。这里留一部分之后在具体写" target="_blank" rel="noopener">https://docs.djangoproject.com/en/3.0/ref/templates/builtins/#built-in-filter-reference。这里留一部分之后在具体写</a></p>
+<h1 id="前端页面"><a href="#前端页面" class="headerlink" title="前端页面"></a>前端页面</h1><h2 id="模板嵌套"><a href="#模板嵌套" class="headerlink" title="模板嵌套"></a>模板嵌套</h2><p>在一个设计风格较为统一的网站中，必然有很多组件是可以重复使用的。比如很多网站有顶部的导航栏，这个导航栏在每个页面都会出现。这时如果我们每次都要重复写一遍就会浪费很多时间。如果可以有一个总的html模板让我们作为一级模板，然后我们再去设计每个页面的具体模板就好了。实际上Django是支持这样做的。</p>
+<p>首先我们需要线制作总的html，那么我们怎么读取分html中的内容呢？换句话说怎么把总html里面的坑用分html里面的内容填入呢？这时我们就要用</p>
+<pre><code class="html">{{% block name %}}{{% endblock %}}
+```
+
+来实现。这里面的block实际上也是一种过滤器，然后name是我们自己规定的，是为了在有多个block时让内容知道自己要去哪里。
+
+接下来我们要在分的html使用总的html。首先
+
+```
+{{%extends '总.html'%}}
+```
+
+引入总html。然后再在每个block里面写入你想要填入的内容即可，比如：
+
+```html
+{{% block title %}}<title>我的个人博客</title>{{% endblock %}}</code></pre>
+<p>这样我们就完成了模板的嵌套。</p>
+<p>顺便一提，有一些模板不是只为一个app使用的，而是整个网站都在使用的，这时候我们需要在根目录下建立一个templates来存放公用的模板。我们需要在settings.py中找到DIRS(我们在(1)中已经讲过，就是在这里用的)，然后把templates文件夹的路径写进去。仔细观察我们会发现settings里面已经给我们设置了基本路径BASE_DIR,也就是我们的项目文件夹，所以我们只需要这样写就可以了：</p>
+<pre><code>DIRS=[
+    os.path.join(BASE_DIR,&#39;templates&#39;)
+]</code></pre><h2 id="使用css"><a href="#使用css" class="headerlink" title="使用css"></a>使用css</h2><p>我们已经制作好了基本的html，但是实在是太简陋了（这里提一个事情，我昨天上课老师给我们分享了之前参加中国软件杯的作品，有一个一等奖作品做的真的很好，就是因为页面太丑了没有得特等奖…），所以我们需要用css对其进行美化。</p>
+<p>内联式的css就不说了，在html中用一个style标签包裹的css也是一样的。如果是外部独立的css文件要怎么让我们的html找到呢？建议现在根目录下新建一个static（静态）文件夹，下面用来存放css、js等文件。再在static下新建css，再把css文件存入其中。</p>
+<p>我们要在settings.py下面增加来让Django找到我们的静态文件</p>
+<pre><code>STATICFILES_DIRS=[
+    os/path.join(BASE_DIR,&#39;static&#39;)
+]</code></pre><p>找的时候用:</p>
+<pre><code class="html">&lt;link rel=&#39;stylesheet&#39; href=&#39;/static/name.css&#39;&gt;</code></pre>
+<p>顺便这里记录一个简单的全局居中方法</p>
+<pre><code class="css">.class {
+    position:absolute;
+    left:50%;
+    right:50%;
+    transform:(-50%,-50%);
+}</code></pre>
+<p>这一章就这样了，内容不是很多（主要是因为上一章太多了），下一章可能会着重讲bootstrap的各方面的使用，也可能不太管前端，继续推进网站建设的内容。</p>
+
+            </div>
+            <hr>
+            <div>
+              <p>
+                
+                  <span>
+                <i class="iconfont icon-inbox"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/web/">web</a>
+                      &nbsp;
+                    
+                  </span>&nbsp;&nbsp;
+                
+                
+                  <span>
+                <i class="iconfont icon-tag"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%89%8D%E7%AB%AF/">-前端</a>
+                    
+                  </span>
+                
+              </p>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" target="_blank" rel="nofollow noopener noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/06/20/Django%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(1)/">
+                        <span class="hidden-mobile">Django学习笔记(1)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="fa fa-chevron-right"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+              
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc-start"></div>
+<div id="toc">
+  <p class="h5"><i class="far fa-list-alt"></i>&nbsp;TOC</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="fa fa-chevron-up scroll-top-arrow" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/popper.js/1.16.1/umd/popper.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+  <script  src="https://cdn.staticfile.org/tocbot/4.10.0/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var navHeight = $('#navbar').height();
+      var toc = $('#toc');
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+      var tocLimMax = 2 * boardTop + boardCtn.height();
+
+      $(window).scroll(function () {
+        var tocLimMin = $('#toc-start').offset().top - navHeight;
+        var scroH = document.body.scrollTop + document.documentElement.scrollTop;
+
+        if (tocLimMin <= scroH && scroH <= tocLimMax) {
+          toc.css({
+            'display': 'block',
+            'position': 'fixed',
+            'top': navHeight,
+          });
+        } else if (scroH <= tocLimMin) {
+          toc.css({
+            'position': '',
+            'top': '',
+          });
+        } else if (scroH > tocLimMax) {
+          toc.css('display', 'none');
+        }
+      });
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc > p').css('visibility', 'visible');
+      }
+      var offset = boardCtn.css('margin-right')
+      $('#toc-ctn').css({
+        'right': offset
+      })
+    });
+  </script>
+
+
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+
+<!-- Plugins -->
+
+
+
+  <script  src="https://cdn.staticfile.org/prettify/188.0.0/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').each(function () {
+        const pre = $(this);
+        if (pre.find('code.mermaid').length > 0) {
+          return;
+        }
+        pre.addClass('prettyprint  linenums');
+      });
+      prettyPrint();
+    })
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Django学习笔记(2)&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

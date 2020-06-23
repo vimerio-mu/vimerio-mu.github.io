@@ -128,7 +128,7 @@
                   
                   <span class="post-meta">
                     <i class="far fa-chart-bar"></i>
-                    2.8k 字
+                    2.9k 字
                   </span>
                 
 
@@ -138,7 +138,7 @@
                       <i class="far fa-clock"></i>
                     
                     
-                    32
+                    33
                      分钟
                   </span>
                 
@@ -277,6 +277,11 @@ def article_detail(request,article_id):
     except Article.DoesNotExist:
         raise Http404(&#39;该文章不存在&#39;)
     return HttpResponse(&#39;文章标题为: %s 文章内容为: %s&#39; % (article.title, article.content))</code></pre>
+<p>当然还有更加简洁的方法跳转到404页面，但是这个时候你就无法定制你404页面的显示内容，<del>不过话又说回来，谁会想要去定制呢？</del></p>
+<pre><code class="python">from django.shortcuts import get_object_or_404
+def article_detail(request,article_id):
+    article = Article.get_object_or_404(id = article_id)
+    return HttpResponse(&#39;文章标题为: %s 文章内容为: %s&#39; % (article.title, article.content))</code></pre>
 <h2 id="使用html模板显示app内容"><a href="#使用html模板显示app内容" class="headerlink" title="使用html模板显示app内容"></a>使用html模板显示app内容</h2><p>你当然可以将html内容全部写在HttpResponse()中，但是这样你会非常的麻烦，而且当你要修改网页内容样式的时候，你还要回到这里修改，十分复杂，前后端代码混合；而且如果你要在多个方法里面使用一个模板也很不方便。于是乎我们建议将模板文件和方法分离。</p>
 <p>你首先需要在app文件夹下创建一个新的文件夹templates，这个名字是在settings里面规定好的，所以你只能用这个名字。当然，如果你仔细观察settings里面的内容你会发现，其中有一个DIRS可以让你填充你写目录，当然这个我们以后再讲。’APP_DIRS’: True表示APP文件夹下的模板文件是有效的，True是默认值。你需要将html模板存入templates文件夹中使其能被获取。</p>
 <hr>
@@ -326,6 +331,12 @@ def article_detail(request,article_id):
                 <div class="post-prevnext row">
                   <div class="post-prev col-6">
                     
+                    
+                      <a href="/2020/06/22/Django%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(2)/">
+                        <i class="fa fa-chevron-left"></i>
+                        <span class="hidden-mobile">Django学习笔记(2)</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </div>
                   <div class="post-next col-6">
